@@ -3,6 +3,7 @@ package com.akash.dhembare2000.tests.crud;
 import com.akash.dhembare2000.base.BaseTest;
 import com.akash.dhembare2000.endpoints.APIConstants;
 import com.akash.dhembare2000.pojos.BookingResponse;
+import com.akash.dhembare2000.utils.PropertyReader;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
@@ -26,10 +27,10 @@ public class testCreateBookingPost extends BaseTest {
                 .when().body(payloadManager.createPayloadBookingAsString()).post();
 
         validatableResponse = response.then().log().all();
-        validatableResponse.statusCode(200);
+        validatableResponse.statusCode(Integer.parseInt(PropertyReader.readKey("booking.post.statuscode.success")));
 
         // Default -  Hamcrest
-        validatableResponse.body("booking.firstname", Matchers.equalTo("Akash"));
+        validatableResponse.body("booking.firstname", Matchers.equalTo(PropertyReader.readKey("booking.post.firstname")));
 
         BookingResponse bookingResponse=payloadManager.bookingResponseJava(response.asString());
 
@@ -38,7 +39,7 @@ public class testCreateBookingPost extends BaseTest {
 
         // AssertJ Assertions
         assertThat(bookingResponse.getBookingid()).isNotNull().isNotZero();
-        assertThat(bookingResponse.getBooking().getFirstname()).isEqualTo("Akash");
+        assertThat(bookingResponse.getBooking().getFirstname()).isEqualTo(PropertyReader.readKey("booking.post.firstname"));
         assertThat(bookingResponse.getBooking().getFirstname()).isNotEmpty().isNotNull().isNotBlank();
     }
 }
